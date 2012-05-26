@@ -1,5 +1,8 @@
 (function(){
     var html = document.getElementsByTagName('html')[0];
+
+
+    // test code
     var html = html.innerHTML.toString();
     console.log(html);
 
@@ -9,9 +12,8 @@
         type: 'saveFile',
         name: testName + '.html',
         content: html
-    }, function(){
-
-    });
+    }, function(){});
+    // test end
 
     alert(2);
 

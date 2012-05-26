@@ -25,6 +25,6 @@ window.onload = function(){
 
     var btn2 = document.getElementById('listFile');
     btn2.onclick = function(){
-        window.open("/fs.html");
+        window.open("/fs2.html");
     };
 }

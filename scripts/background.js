@@ -66,13 +66,10 @@ var handle = {
 
             fs.root.getFile(res.name, {
                 create: true
-                //, exclusive: true
+                , exclusive: true
             }, function(fileEntry){
-                alert('getFileEntry');
-                console.log(fileEntry);
                 fileEntry.createWriter(function(fileWriter) {
 
-                    console.log(fileWriter);
                     fileWriter.onwriteend = function(e) {
                         console.log('Write completed.');
                     };
@@ -83,18 +80,11 @@ var handle = {
 
                     // Create a new Blob and write it to log.txt.
                     var bb = new window.BlobBuilder(); // Note: window.WebKitBlobBuilder in Chrome 12.
-                    alert('bb created')
                     bb.append(res.content);
-                    console.log(bb); //test bb
-                    alert(bb)
                     fileWriter.write(bb.getBlob('text/plain'));
 
-                    callback || callback(fileEntry.toURL);
-                    alert(fileEntry.toURL());
+                    //callback || callback(fileEntry.toURL);
                 }, errorHandler);
-                //TODO: fix bug
-                alert(fileEntry.toURL());
-
             }, errorHandler);
         }, errorHandler);
     },
