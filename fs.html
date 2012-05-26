@@ -35,6 +35,7 @@
         <script>
             window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
             window.BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder;
+
             var fs = null;
 
             function errorHandler(e) {
@@ -77,8 +78,7 @@
                         return;
                     }
                     fs.root.getFile('log.txt', {create: true}, function(fileEntry){
-                        //TODO: fix bug
-                        // Create a FileWriter object for our FileEntry (log.txt).
+                        console.log(fileEntry);
                         fileEntry.createWriter(function(fileWriter) {
 
                             fileWriter.onwriteend = function(e) {
@@ -90,11 +90,13 @@
                             };
 
                             // Create a new Blob and write it to log.txt.
-                            var bb = new BlobBuilder(); // Note: window.WebKitBlobBuilder in Chrome 12.
-                            bb.append('Lorem Ipsum');
+                            var bb = new window.BlobBuilder(); // Note: window.WebKitBlobBuilder in Chrome 12.
+                            bb.append('test');
                             fileWriter.write(bb.getBlob('text/plain'));
 
+                            callback || callback(fileEntry.toURL);
                         }, errorHandler);
+                        //TODO: fix bug
                     }, errorHandler);
                     fs.root.getFile('song.mp3', {create: true}, null, errorHandler);
                     fs.root.getDirectory('mypictures', {create: true}, null, errorHandler);
