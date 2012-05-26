@@ -8,9 +8,8 @@ window.onload = function(){
     
     var btn = document.getElementById('fs');
     btn.onclick = function(){
-        
         //获得文件系统
-        chrome.tabs.getSelected(function(tab){
+        chrome.tabs.getSelected(null, function(tab){
             chrome.tabs.executeScript(tab.id, {
                 file: "./scripts/content_script.js"
             }, function(){
@@ -25,6 +24,6 @@ window.onload = function(){
 
     var btn2 = document.getElementById('listFile');
     btn2.onclick = function(){
-        window.open("/fs2.html");
+        window.open("/fs.html");
     };
 }
