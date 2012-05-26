@@ -14,7 +14,11 @@
     },
     "permissions": [
       "tabs",
-      "notifications"
+      "notifications",
+      "unlimitedStorage",
+      "http://*/*", 
+      "https://*/*"
     ],
+
     "background_page": "background.html"
 }

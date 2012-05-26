@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>为filesystem api授权</title>
+    <script type="text/javascript">
+        window.requestFileSystem  = window.requestFileSystem || 
+            window.webkitRequestFileSystem;
+        window.webkitStorageInfo.requestQuota(window.PERSISTENT, 1024*1024*5, function(grantedBytes) {
+            window.requestFileSystem(window.PERSISTENT, 1, function(fs){
+                if(fs){
+                    console.log('auth finished');
+                    window.close();
+                }
+            });
+        });
+
+    </script>
+    <style type="text/css">
+        h1{
+            text-align: center;
+        }
+        p{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>第一次使用pageNote, 请您授权应用</h1>
+    <p>html5 filesystem api 在chrome上用户点击上方的黄色浮动条对持久的存储授权，
+    而这个浮动条似乎不能在popup界面弹出(会崩溃), 所以需要额外的授权页面</p>
+	
+</body>
+</html>
