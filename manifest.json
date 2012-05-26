@@ -1,0 +1,20 @@
+{
+   "name":"",
+    "version": "1",
+    "description":"用来关掉你的社交网站的小插件",
+    "browser_action": {
+      "default_title": "关掉你的社交网站",
+      "default_icon": "icons/icon48.png",
+      "default_popup": "popup.html"
+    },
+    "icons": {
+      "128": "icons/icon128.png",
+      "16": "icons/icon48.png",
+      "48": "icons/icon48.png"
+    },
+    "permissions": [
+      "tabs",
+      "notifications"
+    ],
+    "background_page": "background.html"
+}
