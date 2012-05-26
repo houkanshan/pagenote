@@ -1,9 +1,9 @@
 {
-   "name":"",
-    "version": "1",
-    "description":"用来关掉你的社交网站的小插件",
+   "name":"pagenote",
+    "version": "0.1",
+    "description":"just like evernote in chrome",
     "browser_action": {
-      "default_title": "关掉你的社交网站",
+      "default_title": "pagenote",
       "default_icon": "icons/icon48.png",
       "default_popup": "popup.html"
     },
