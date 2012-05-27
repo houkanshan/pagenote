@@ -1,4 +1,3 @@
-//filesystem 直接放后台？
 window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
 window.storageInfo = window.storageInfo || window.webkitStorageInfo;
 window.BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder;
@@ -60,12 +59,6 @@ var handle = (function(){
 
     //嵌入js，存储到fs
     return {
-        savePage: function(res, sender, callback){
-            console.log('do js');
-            var info = JSON.stringify(res);
-            console.log(info);
-            console.log(res.tab.id);
-        },
         /**
          *  @res.name {string} name of file full path
          *  @res.content {string} content of file, full path
@@ -75,29 +68,32 @@ var handle = (function(){
         saveFile: function(res, sender, callback){
             //console.log('do save file', '');
             window.requestFileSystem(window.TEMPORARY, 1000*1000*10, function(fs){
-                if(!fs){return;}
+                if(!fs || !res.name || !res.dir){return;}
                 console.log('name: ' + fs.name);
     
-                fs.root.getFile(res.name, {
-                    create: true
-                    , exclusive: true
-                }, function(fileEntry){
-                    fileEntry.createWriter(function(fileWriter) {
+
+                fs.root.getDirectory(res.dir, {create: false}, function(dirEntry) {
+                    dirEntry.getFile(res.name, {
+                        create: true
+                        , exclusive: true
+                    }, function(fileEntry){
+                        fileEntry.createWriter(function(fileWriter) {
     
-                        fileWriter.onwriteend = function(e) {
-                            console.log('Write completed.');
-                        };
+                            fileWriter.onwriteend = function(e) {
+                                console.log('Write completed.');
+                            };
     
-                        fileWriter.onerror = function(e) {
-                            console.log('Write failed: ' + e.toString());
-                        };
+                            fileWriter.onerror = function(e) {
+                                console.log('Write failed: ' + e.toString());
+                            };
     
-                        // Create a new Blob and write it to log.txt.
-                        var bb = new window.BlobBuilder(); // Note: window.WebKitBlobBuilder in Chrome 12.
-                        bb.append(res.content);
-                        fileWriter.write(bb.getBlob('text/plain'));
+                            // Create a new Blob and write it to log.txt.
+                            var bb = new window.BlobBuilder(); // Note: window.WebKitBlobBuilder in Chrome 12.
+                            bb.append(res.content);
+                            fileWriter.write(bb.getBlob('text/plain'));
     
-                        //callback || callback(fileEntry.toURL);
+                            //callback && callback(fileEntry.toURL);
+                        }, errorHandler);
                     }, errorHandler);
                 }, errorHandler);
             }, errorHandler);

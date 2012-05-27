@@ -52,9 +52,13 @@ PageNote.DOM = (function(){
         addFileItem: function(file){
             var li = doc.createElement('li');
             li.innerHTML = 
-                '<a href="' + file.path + '">'+
+                '<a data-link="' + file.path + '" targe="_blank">'+
                     file.name +
                 '</a>';
+            li.onclick = function(){
+                var href = this.getElementsByTagName('a')[0].getAttribute('data-link');
+                chrome.tabs.create({url: href});
+            }
             fileList.appendChild(li);
         }
     };
