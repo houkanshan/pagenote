@@ -37,6 +37,7 @@ PageNote.DOM = (function(){
                 chrome.extension.sendRequest({
                     type: 'delAll'
                 }, function(){});
+                window.close();
             };
 
             btn2.onclick = function(){
@@ -51,13 +52,24 @@ PageNote.DOM = (function(){
          *  **/
         addFileItem: function(file){
             var li = doc.createElement('li');
+            file.name = file.name.substr(0, 20);
             li.innerHTML = 
                 '<a data-link="' + file.path + '" targe="_blank">'+
                     file.name +
                 '</a>';
             li.onclick = function(){
                 var href = this.getElementsByTagName('a')[0].getAttribute('data-link');
-                chrome.tabs.create({url: href});
+                chrome.tabs.create({url: href}, function(tab){
+                    console.log('tab created');
+                    chrome.tabs.executeScript(tab.id, {
+                        file: "/scripts/commenter.js"
+                    }, function(){
+                        console.log('commenter insert');
+                        if (chrome.extension.lastError) {
+                            console.log(chrome.extension.lastError);
+                        }
+                    });
+                });
             }
             fileList.appendChild(li);
         }
@@ -86,13 +98,13 @@ window.onload = function(){
 
 
     /* test */
-    chrome.extension.sendRequest({
-        type: 'createDir',
-        name: 'test'
-    }, function(res){
-        console.log(res);
-        if(res.err){ console.log(res.err); return;}
-        console.log(res.prefix);
-    })
+    //chrome.extension.sendRequest({
+        //type: 'createDir',
+        //name: 'test'
+    //}, function(res){
+        //console.log(res);
+        //if(res.err){ console.log(res.err); return;}
+        //console.log(res.prefix);
+    //})
     /* test end */
 };

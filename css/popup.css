@@ -45,3 +45,57 @@ body {
     background:rgb(235, 235, 235);
 }
 /* common end */
+header{
+    text-align:center;
+}
+button{
+    display:block;
+    float:left;
+    margin:0 7px 0 0;
+    background-color:#f5f5f5;
+    border:1px solid #dedede;
+    border-top:1px solid #eee;
+    border-left:1px solid #eee;
+
+    font-family:"Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+    font-size:12px;
+    line-height:130%;
+    text-decoration:none;
+    font-weight:bold;
+    color:#565656;
+    cursor:pointer;
+    padding:5px 10px 6px 7px; /* Links */
+}
+button{
+    width:auto;
+    overflow:visible;
+}
+button[type]{
+    padding:5px 10px 5px 7px; /* Firefox */
+    line-height:17px; /* Safari */
+}
+*:first-child+html button[type]{
+}
+
+#fileList {
+    font-size: 12px;
+    word-break: break-all;
+    padding: 5px 5px;
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+}
+#fileList li{
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-height: 20px;
+    height: 20px;
+    margin: 5px;
+}
+#fileList li a:active,
+#fileList li a:focus,
+#fileList li a:hover {
+    background: #07c;
+    color: white;
+    cursor: pointer;
+}

@@ -64,6 +64,7 @@ endsWith: function(str, suffix) {
         this.canFinish = false;
 
         this.url = url;
+        console.log('[content-script]', url);
         this.pathPrefix = "/" + escapeURL(url); // TODO: chrome.extension.requestPrefix
         chrome.extension.sendRequest({
             type: 'createDir',
@@ -94,6 +95,8 @@ endsWith: function(str, suffix) {
             }
         };
         this.saveAsFile = function(url, callback) {
+            var that = this;
+            console.log('[saveAsFile]', this.pathPrefix);
             if (!string.startsWith(url, 'http://') && !string.startsWith(url, 'https://')) {
                 callback(url);
                 return;
@@ -113,7 +116,7 @@ endsWith: function(str, suffix) {
                           //name: this.pathPrefix + '/' + filename,
                           name: filename,
                           content: req.responseText
-                          });
+                        });
                         callback(that.pathPrefix + '/' + filename);
 
                         console.log("'" + url + "' saved as " + that.pathPrefix + '/' + filename);
@@ -138,6 +141,7 @@ endsWith: function(str, suffix) {
                 if (nodeName === 'img' || nodeName === 'script') {
                     that.saveAsFile(node.src, function(newurl) {
                         node.src = newurl;
+                        console.log('[callback]', newurl);
                         node.setAttribute('src', newurl);
                     });
                 } else if (nodeName === 'link') {
@@ -172,6 +176,11 @@ endsWith: function(str, suffix) {
     }
 
     var html = document.getElementsByTagName('html')[0].cloneNode(true);
+    var tag = document.createElement('script');
+    tag.type='text/javascript';
+    tag.src = chrome.extension.getURL('/scripts/commenter.js');
+    html.getElementsByTagName('body')[0].appendChild(tag);
+
     var isFinshed = false;
 
     var page = new Page(location.href);
@@ -188,8 +197,14 @@ endsWith: function(str, suffix) {
                 dir: page.pathPrefix,
                 content: html.innerHTML.toString()
             }, function(){});
-            alert(2);
-            console.log(html.innerHTML.toString());
+            alert('保存成功');
+            var notification = webkitNotifications.createNotification(
+                '',  // icon url - can be relative
+                'OK!',  // notification title
+                '页面保存成功'  // notification body text
+                );
+            notification.show();
+            
         }, 1000);
     });
 
@@ -206,7 +221,6 @@ endsWith: function(str, suffix) {
             content: html.innerHTML.toString()
         }, function(){});
         alert(2);
-        console.log(html.innerHTML.toString());
     }, 5000);
 
 }());

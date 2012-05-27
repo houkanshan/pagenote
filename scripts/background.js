@@ -65,37 +65,50 @@ var handle = (function(){
          *  @sender ingore
          *  @callback 
          *  **/
-        saveFile: function(res, sender, callback){
-            //console.log('do save file', '');
-            window.requestFileSystem(window.TEMPORARY, 1000*1000*10, function(fs){
-                if(!fs || !res.name || !res.dir){return;}
-                console.log('name: ' + fs.name);
+        save: function(res, sender, callback, dirEntry, isCreate){
+            fs.root.getDirectory(res.dir, {create: false}, function(dirEntry) {
+                dirEntry.getFile(res.name, {
+                    create: isCreate
+                    , exclusive: true
+                }, function(fileEntry){
+                    fileEntry.createWriter(function(fileWriter) {
     
-
-                fs.root.getDirectory(res.dir, {create: false}, function(dirEntry) {
-                    dirEntry.getFile(res.name, {
-                        create: true
-                        , exclusive: true
-                    }, function(fileEntry){
-                        fileEntry.createWriter(function(fileWriter) {
+                        fileWriter.onwriteend = function(e) {
+                            console.log('Write completed.');
+                        };
     
-                            fileWriter.onwriteend = function(e) {
-                                console.log('Write completed.');
-                            };
+                        fileWriter.onerror = function(e) {
+                            console.log('Write failed: ' + e.toString());
+                        };
     
-                            fileWriter.onerror = function(e) {
-                                console.log('Write failed: ' + e.toString());
-                            };
+                        // Create a new Blob and write it to log.txt.
+                        var bb = new window.BlobBuilder(); // Note: window.WebKitBlobBuilder in Chrome 12.
+                        bb.append(res.content);
+                        fileWriter.write(bb.getBlob('text/plain'));
     
-                            // Create a new Blob and write it to log.txt.
-                            var bb = new window.BlobBuilder(); // Note: window.WebKitBlobBuilder in Chrome 12.
-                            bb.append(res.content);
-                            fileWriter.write(bb.getBlob('text/plain'));
-    
-                            //callback && callback(fileEntry.toURL);
-                        }, errorHandler);
+                        //callback && callback(fileEntry.toURL);
                     }, errorHandler);
                 }, errorHandler);
+            }, errorHandler);
+        },
+        saveFile: function(res, sender, callback){
+            //console.log('do save file', '');
+            var that = this;
+            if(!fs || !res.name || !res.dir){return;}
+            console.log('name: ' + fs.name);
+    
+
+            fs.root.getDirectory(res.dir, {create: false}, function(dirEntry) {
+                that.save(res, sender, callback, dirEntry, true);
+            }, errorHandler);
+        },
+        reSaveFile: function(res, sender, callback){
+            var that = this;
+            if(!fs || !res.name || !res.dir){return;}
+            console.log('name: ' + fs.name);
+
+            fs.root.getDirectory(res.dir, {create: false}, function(dirEntry) {
+                that.save(res, sender, callback, dirEntry, false);
             }, errorHandler);
         },
         readFile: function(res, sender, callback){
