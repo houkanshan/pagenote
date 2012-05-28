@@ -47,7 +47,7 @@
     toolbar.id = 'pagenote-toolbar'; // you must remove it when saving the whole DOM
     toolbar.setAttribute('style', 'position: fixed; left: 10%; bottom: 0; height: 40px; width: 80%;  background-color: black; padding: 0.5em: z-index: 1000; opacity: 0.8; text-align: center;');
     
-    var buttonStyle = 'display: inline-block; background: #07c; height: 30px; ';
+    var buttonStyle = 'display: inline-block; background: #07c; height: 30px; padding: 2px 5px';
     buttonStyle += 'color: black; border:none; margin: 5px 10px;'
     var highlightBtn = document.createElement('input');
     highlightBtn.type = 'button';

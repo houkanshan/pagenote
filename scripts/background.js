@@ -81,10 +81,24 @@ var handle = (function(){
                             console.log('Write failed: ' + e.toString());
                         };
     
-                        // Create a new Blob and write it to log.txt.
-                        var bb = new window.BlobBuilder(); // Note: window.WebKitBlobBuilder in Chrome 12.
-                        bb.append(res.content);
-                        fileWriter.write(bb.getBlob('text/plain'));
+                        fileType = res.fileType || 'text/plain';
+
+                        var bb = new window.BlobBuilder(); 
+
+                        if( fileType !== 'text/plain'){
+                            var byteArray = new Uint8Array(res.content.length);
+                            for (var i = 0; i < res.content.length; i++) {
+                                byteArray[i] = res.content.charCodeAt(i) & 0xff;
+                            }
+                            bb.append(byteArray.buffer);
+                        }
+                        else {
+                            bb.append(res.content);
+                        }
+
+                        //fileWriter.write(bb.getBlob(fileType));
+                        fileWriter.write(bb.getBlob(fileType));
+                        //console.log(res.name, bb.getBlob(fileType));
     
                         //callback && callback(fileEntry.toURL);
                     }, errorHandler);

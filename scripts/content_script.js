@@ -102,10 +102,27 @@ endsWith: function(str, suffix) {
                 return;
             }
 
+            var MIMETypeList = {
+                png: 'image/png',
+                html: 'text/html',
+                gif: 'image/gif',
+                jpg: 'image/jepg',
+                jpeg: 'image/jepg',
+                jpeg: 'image/jepg',
+                ico: ' image/x-icon'
+            };
+            var suffix = url.split('.').pop();
+            var MIMEType = "text/plain";
+            if(MIMETypeList[suffix]){
+                MIMEType = MIMETypeList[suffix];
+                console.log('setFileType ', MIMEType);
+            }
+
             // not a data url, we must download it
             var req = new XMLHttpRequest();
-            req.overrideMimeType('text/plain; charset=x-user-defined');
-            req.onreadystatechange = function() {
+            req.overrideMimeType(MIMEType + '; charset=x-user-defined');
+            //req.responseType = '';
+            req.onload = function() {
                 if (req.readyState == 4) {
                     if (req.status == 200) {
                         var filename = that.availableName(escapeURL(extractFileName(url)));
@@ -115,9 +132,28 @@ endsWith: function(str, suffix) {
                           dir: that.pathPrefix,
                           //name: this.pathPrefix + '/' + filename,
                           name: filename,
-                          content: req.responseText
+                          fileType: MIMEType,
+                          content: req.response
                         });
                         callback(that.pathPrefix + '/' + filename);
+                        //test
+                        //BlobBuilder = window.MozBlobBuilder || window.WebKitBlobBuilder || window.BlobBuilder;
+                        //var byteArray = new Uint8Array(req.response.length);
+                        //for (var i = 0; i < req.response.length; i++) {
+                            //byteArray[i] = req.response.charCodeAt(i) & 0xff;
+                        //}
+
+                        //var BlobBuilderObj = new (window.BlobBuilder || window.WebKitBlobBuilder)();
+
+                        //// CHANGE 3: Pass the BlobBuilder an ArrayBuffer instead of a string
+                        //BlobBuilderObj.append(byteArray.buffer);
+                        //var blob = BlobBuilderObj.getBlob(MIMEType);
+
+                        //var img = document.createElement('img');
+                        //img.src = window.webkitURL.createObjectURL(blob);
+                        //document.body.appendChild(img);
+                        //test
+                        
 
                         console.log("'" + url + "' saved as " + that.pathPrefix + '/' + filename);
                     } else {
