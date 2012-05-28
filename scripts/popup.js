@@ -18,19 +18,27 @@ PageNote.DOM = (function(){
             delAllBtn = $id('delAll');
             btn2 = $id('listFile');
             fileList = $id('fileList');
+            markBtn = $id('mark');
+
+            markBtn.onclick = function(){
+                chrome.tabs.getSelected(null, function(tab){
+                    chrome.tabs.executeScript(tab.id, {
+                        file: "./scripts/commenter.js"
+                    }, function(){});
+                    chrome.tabs.insertCSS(tab.id, {
+                        file: "./css/commenter.css"
+                    }, function(){});
+                });
+            }
 
             saveCurrentBtn.onclick = function(){
                 //获得文件系统
                 chrome.tabs.getSelected(null, function(tab){
                     chrome.tabs.executeScript(tab.id, {
                         file: "./scripts/content_script.js"
-                    }, function(){
-                        console.log('callend');
-                        if (chrome.extension.lastError) {
-                            console.log(chrome.extension.lastError);
-                        }
-                    });
+                    }, function(){});
                 });
+                window.close();
             };
 
             delAllBtn.onclick = function(){

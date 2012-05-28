@@ -29,7 +29,7 @@
     </head>
     <body>
         <div id="example-list-fs" class="example">
-            <button>Add some files</button> <button>List files</button> <button>Remove all files</button>
+             <button>List files</button> <button>Remove all files</button>
             <ul id="example-list-fs-ul"></ul>
         </div>
         <script>
@@ -72,38 +72,9 @@
             var buttons = document.querySelectorAll('#example-list-fs button');
             var filelist = document.querySelector('#example-list-fs-ul');
 
-            if (buttons.length >= 3) {
+            if (buttons.length >= 2) {
+
                 buttons[0].addEventListener('click', function(e) {
-                    if (!fs) {
-                        return;
-                    }
-                    fs.root.getFile('log.txt', {create: true}, function(fileEntry){
-                        console.log(fileEntry);
-                        fileEntry.createWriter(function(fileWriter) {
-
-                            fileWriter.onwriteend = function(e) {
-                                console.log('Write completed.');
-                            };
-
-                            fileWriter.onerror = function(e) {
-                                console.log('Write failed: ' + e.toString());
-                            };
-
-                            // Create a new Blob and write it to log.txt.
-                            var bb = new window.BlobBuilder(); // Note: window.WebKitBlobBuilder in Chrome 12.
-                            bb.append('test');
-                            fileWriter.write(bb.getBlob('text/plain'));
-
-                            callback || callback(fileEntry.toURL);
-                        }, errorHandler);
-                        //TODO: fix bug
-                    }, errorHandler);
-                    fs.root.getFile('song.mp3', {create: true}, null, errorHandler);
-                    fs.root.getDirectory('mypictures', {create: true}, null, errorHandler);
-                    filelist.innerHTML = 'Files created.';
-                }, false);
-
-                buttons[1].addEventListener('click', function(e) {
                     if (!fs) {
                         return;
                     }
@@ -122,14 +93,18 @@
                             var img = entry.isDirectory ? '<img src="http://www.html5rocks.com/static/images/tutorials/icon-folder.gif">' :
                             '<img src="http://www.html5rocks.com/static/images/tutorials/icon-file.gif">';
                             var li = document.createElement('li');
-                            li.innerHTML = [img, '<span>', entry.toURL(), '</span>'].join('');
+                            li.innerHTML = [
+                            img, 
+                            '<a href="'+entry.toURL()+'">', 
+                                entry.toURL(), 
+                                '</span>'].join('');
                             fragment.appendChild(li);
                         }
                         filelist.appendChild(fragment);
                     }, errorHandler);
                 }, false);
 
-                buttons[2].addEventListener('click', function(e) {
+                buttons[1].addEventListener('click', function(e) {
                     if (!fs) {
                         return;
                     }

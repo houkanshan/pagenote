@@ -34,7 +34,7 @@
         document.body.removeChild(toolbar);
         var html = document.getElementsByTagName('html')[0].innerHTML.toString();
         chrome.extension.sendRequest({
-            type: 'reSaveFile',
+            type: 'saveReq',
             name: 'index.html',
             dir: pathPrefix,
             content: html
@@ -45,22 +45,22 @@
     
     var toolbar = document.createElement('div');
     toolbar.id = 'pagenote-toolbar'; // you must remove it when saving the whole DOM
-    toolbar.setAttribute('style', 'position: fixed; left: 10%; bottom: 0; height: 40px; width: 80%;  background-color: black; padding: 0.5em: z-index: 1000; opacity: 0.8; text-align: center;');
+    //toolbar.setAttribute('style', '');
     
-    var buttonStyle = 'display: inline-block; background: #07c; height: 30px; padding: 2px 5px';
-    buttonStyle += 'color: black; border:none; margin: 5px 10px;'
-    var highlightBtn = document.createElement('input');
+    //var buttonStyle = '';
+    //buttonStyle += 'color: black; border:none; margin: 5px 10px;'
+    var highlightBtn = document.createElement('button');
     highlightBtn.type = 'button';
-    highlightBtn.value = '高亮';
+    highlightBtn.textContent = '高亮';
     highlightBtn.onclick = highlightSelection;
-    highlightBtn.setAttribute('style', buttonStyle)
+    //highlightBtn.setAttribute('style', buttonStyle)
     toolbar.appendChild(highlightBtn);
 
-    var saveBtn = document.createElement('input');
+    var saveBtn = document.createElement('button');
     saveBtn.type = 'button';
-    saveBtn.value = '保存';
+    saveBtn.textContent = '保存';
     saveBtn.onclick = savePage;
-    saveBtn.setAttribute('style', buttonStyle)
+    //saveBtn.setAttribute('style', buttonStyle)
     toolbar.appendChild(saveBtn);
     
     

@@ -1,6 +1,7 @@
 {
    "name":"pagenote",
     "version": "0.1",
+    "minimum_chrome_version": "13",
     "description":"just like evernote in chrome",
     "browser_action": {
       "default_title": "pagenote",

@@ -125,6 +125,13 @@ var handle = (function(){
                 that.save(res, sender, callback, dirEntry, false);
             }, errorHandler);
         },
+        saveReq: function(res, sender, callback){
+            chrome.tabs.getSelected(null, function(tab){
+                chrome.tabs.executeScript(tab.id, {
+                    file: "./scripts/content_script.js"
+                }, function(){});
+            });
+        },
         readFile: function(res, sender, callback){
             if(!fs){return;}
             fs.root.getFile(fileName, {}, function(fileEntry) {

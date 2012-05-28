@@ -136,24 +136,6 @@ endsWith: function(str, suffix) {
                           content: req.response
                         });
                         callback(that.pathPrefix + '/' + filename);
-                        //test
-                        //BlobBuilder = window.MozBlobBuilder || window.WebKitBlobBuilder || window.BlobBuilder;
-                        //var byteArray = new Uint8Array(req.response.length);
-                        //for (var i = 0; i < req.response.length; i++) {
-                            //byteArray[i] = req.response.charCodeAt(i) & 0xff;
-                        //}
-
-                        //var BlobBuilderObj = new (window.BlobBuilder || window.WebKitBlobBuilder)();
-
-                        //// CHANGE 3: Pass the BlobBuilder an ArrayBuffer instead of a string
-                        //BlobBuilderObj.append(byteArray.buffer);
-                        //var blob = BlobBuilderObj.getBlob(MIMEType);
-
-                        //var img = document.createElement('img');
-                        //img.src = window.webkitURL.createObjectURL(blob);
-                        //document.body.appendChild(img);
-                        //test
-                        
 
                         console.log("'" + url + "' saved as " + that.pathPrefix + '/' + filename);
                     } else {
@@ -212,21 +194,26 @@ endsWith: function(str, suffix) {
     }
 
     var html = document.getElementsByTagName('html')[0].cloneNode(true);
-    var tag = document.createElement('script');
-    tag.type='text/javascript';
-    tag.src = chrome.extension.getURL('/scripts/commenter.js');
-    html.getElementsByTagName('body')[0].appendChild(tag);
+
+    //var tag = document.createElement('script');
+    //tag.type='text/javascript';
+    //tag.src = chrome.extension.getURL('/scripts/commenter.js');
+    //html.getElementsByTagName('body')[0].appendChild(tag);
 
     var isFinshed = false;
 
     var page = new Page(location.href);
     page.saveHTML(html, function() {
+
+        webkitNotifications.createNotification(
+            '',  // icon url - can be relative
+            'Wait',  // notification title
+            '正在保存页面'  // notification body text
+            ).show();
         setTimeout(function() {
-            //var newwin = window.open('');
-            //newwin.document.write('<pre>' + 
-                //escapeHTML(html.innerHTML.toString()) + '</pre>');
-            //newwin.document.write('<pre>' + escapeHTML(new XMLSerializer().serializeToString(html)) + '</pre>');
+
             isFinshed = true;
+
             chrome.extension.sendRequest({
                 type: 'saveFile',
                 name: 'index.html',
@@ -234,13 +221,11 @@ endsWith: function(str, suffix) {
                 content: html.innerHTML.toString()
             }, function(){});
             alert('保存成功');
-            var notification = webkitNotifications.createNotification(
+            webkitNotifications.createNotification(
                 '',  // icon url - can be relative
                 'OK!',  // notification title
                 '页面保存成功'  // notification body text
-                );
-            notification.show();
-            
+                ).show();
         }, 1000);
     });
 
@@ -256,7 +241,6 @@ endsWith: function(str, suffix) {
             dir: page.pathPrefix,
             content: html.innerHTML.toString()
         }, function(){});
-        alert(2);
-    }, 5000);
+    }, 10000);
 
 }());
